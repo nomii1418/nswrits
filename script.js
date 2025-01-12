@@ -1,9 +1,31 @@
+// Utility function to set a cookie
+function setCookie(name, value, hours) {
+  const d = new Date();
+  d.setTime(d.getTime() + (hours * 60 * 60 * 1000));
+  const expires = `expires=${d.toUTCString()}`;
+  document.cookie = `${name}=${value};${expires};path=/`;
+}
+
+// Utility function to get a cookie's value
+function getCookie(name) {
+  const nameEQ = `${name}=`;
+  const ca = document.cookie.split(';');
+  for(let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}
+
 const storedData = JSON.parse(localStorage.getItem('skipAdToken'));
 const now = Date.now();
+const cookieToken = getCookie('skipAdToken');
 
-if (!storedData || storedData.expiryTime < now) {
-    const currentPath = window.location.pathname.replace(/^\//, ''); // This ensures only the leading slash is removed
-    const skipAdUrl = `/index.html?redirect=${encodeURIComponent(currentPath)}`; // Encoding the path for safety
+// Validate using cookies and stored data
+if (!storedData || !cookieToken || storedData.expiryTime < now || storedData.token !== cookieToken) {
+    const currentPath = window.location.pathname.replace(/^\//, ''); // Ensure only the leading slash is removed
+    const skipAdUrl = `/index.html?redirect=${encodeURIComponent(currentPath)}`;
     window.location.href = skipAdUrl;
 } else {
     console.log('Token is valid, no redirection needed.');
