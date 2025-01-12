@@ -51,7 +51,7 @@
     </div>
 
     <script>
-        const siteUrl = "https://nswrits.pages.dev";
+        const siteUrl = "https://nswritngs.pages.dev";
         const apiKey = "8f0632474aa559562a75027b265fe4e8f53e7ea4";
 
         function generateToken() {
@@ -78,6 +78,7 @@
 
                         const expiryTime = Date.now() + 3600 * 1000;
                         localStorage.setItem('skipAdToken', JSON.stringify({ token, expiryTime }));
+                        setCookie('skipAdToken', token, 1); // Store token as a cookie
 
                         skipAdBtn.addEventListener("click", () => {
                             window.location.href = shortUrl;
